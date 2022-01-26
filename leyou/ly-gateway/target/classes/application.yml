@@ -1,0 +1,38 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: api-gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+zuul:
+  prefix: /api   # 路由路径前缀
+  routes:
+    item-service: /item/**    #意为凡是以item访问的一切都可
+    search-service: /search/**
+    user-service: /user/**
+    auth-service: /auth/**
+    cart-service: /cart/**
+    upload-service:
+      path: /upload/**
+      serviceId: upload-service
+      strip-prefix: false
+      #不去除前缀path
+  add-host-header: true
+  sensitive-headers:
+ly:
+  jwt:
+    pubKeyPath: D:/heima/rsa/rsa.pub # 公钥地址
+    cookieName: LEYOU_TOKEN
+
+  filter:
+      allowPaths:
+        #这些是白名单，不用登录可以直接访问的服务模块，注意，item属于后台模块，等到实际线上运行时也需要登录才能访问
+        - /api/auth
+        - /api/search
+        - /api/user/register
+        - /api/user/check
+        - /api/user/code
+        - /api/item
